@@ -1,0 +1,11 @@
+{
+  "name": "live-store-canvas",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"engine/**/*.test.js\"",
+    "presence": "node engine/presence/server.js",
+    "revenue": "node engine/revenue/server.js"
+  },
+  "engines": { "node": ">=22" }
+}

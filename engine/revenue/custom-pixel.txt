@@ -1,0 +1,22 @@
+// Paste into Shopify admin → Settings → Customer events → Add custom pixel.
+// Same mapping as pixel.js (Shopify custom pixels can't import files).
+const ENDPOINT = 'TUNNEL_URL/px';
+const SHOP = (init && init.data && init.data.shop && init.data.shop.myshopifyDomain) || 'dev-store';
+
+function send(body) {
+  fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(body), keepalive: true }).catch(() => {});
+}
+
+analytics.subscribe('page_viewed', (event) => {
+  const path = event.context && event.context.document && event.context.document.location && event.context.document.location.pathname;
+  const ts = Date.parse(event.timestamp);
+  if (event.clientId && path && Number.isFinite(ts)) send({ kind: 'page', shop: SHOP, clientId: event.clientId, path, ts });
+});
+
+for (const name of ['checkout_started', 'checkout_completed']) {
+  analytics.subscribe(name, (event) => {
+    const token = event.data && event.data.checkout && event.data.checkout.token;
+    const ts = Date.parse(event.timestamp);
+    if (event.clientId && token && Number.isFinite(ts)) send({ kind: 'checkout', shop: SHOP, clientId: event.clientId, checkoutToken: token, ts });
+  });
+}

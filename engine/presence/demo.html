@@ -1,0 +1,34 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Demo Store</title>
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; margin: 2rem; max-width: 40rem; }
+  nav { display: flex; gap: 1rem; margin-bottom: 1rem; }
+  pre { background: #f2f4f6; padding: 1rem; font-size: 13px; overflow-x: auto; }
+</style>
+<nav>
+  <a href="/" data-spa>Home</a>
+  <a id="to-product" href="/products/glow-serum" data-spa>Glow Serum</a>
+  <a id="to-cart" href="/cart" data-spa>Cart</a>
+</nav>
+<h1 id="heading">Home</h1>
+<p>Demo storefront. Links change the page without a reload, like a modern theme.</p>
+<h2>Live (from /stream)</h2>
+<pre id="live">connecting…</pre>
+<script async src="/tracker.js" data-shop="demo"></script>
+<script>
+  const titles = { '/': 'Home', '/products/glow-serum': 'Glow Serum', '/cart': 'Cart' };
+  const render = () => { document.title = titles[location.pathname] ?? 'Demo Store'; heading.textContent = document.title; };
+  render();
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-spa]');
+    if (!a) return;
+    e.preventDefault();
+    const path = new URL(a.href).pathname;
+    document.title = titles[path];
+    history.pushState({}, '', path);
+    render();
+  });
+  addEventListener('popstate', render);
+  new EventSource('/stream?shop=demo').addEventListener('live', (e) => { live.textContent = JSON.stringify(JSON.parse(e.data), null, 2); });
+</script>
