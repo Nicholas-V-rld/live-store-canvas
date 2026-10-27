@@ -1,5 +1,7 @@
 # Live Store Canvas
 
+> Built by Daniel Oyinloluwa and Nicholas V. as a team.
+
 A Figma-style canvas of a Shopify store: every page is a frame, live shoppers appear as cursors on the page they're viewing, arrows show how people move between pages, and each page shows the revenue it helped make.
 
 ## What's here
